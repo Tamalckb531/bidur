@@ -1,0 +1,33 @@
+{
+    "manifest_version": 3,
+    "name": "Bidur",
+    "version": "1.0.0",
+    "description": "An AI powered agent to assist you understand github profile or repo",
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "storage"
+    ],
+    "host_permissions": [
+        "https://github.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://github.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "action": {
+        "default_popup": "index.html",
+        "default_title": "Bidur"
+    }
+}

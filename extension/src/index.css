@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@plugin 'tailwind-scrollbar';
+:root {
+  --bg-color: #e2ddd9;
+  --dark-color: #8d8179;
+}
