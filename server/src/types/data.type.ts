@@ -140,7 +140,7 @@ export type VectorMetadata = {
 
 export type VectorData = {
   id: string;
-  values: number[];
+  vector: number[];
   metadata: VectorMetadata;
 };
 
@@ -157,5 +157,5 @@ export type UrlType =
   | "REPO_IN_File";
 
 export enum Constants {
-  GITOPEX_INDEX = "gitopex-index",
+  COLLECTION = "bidur-data-collections",
 }

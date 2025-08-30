@@ -9,6 +9,7 @@ import {
   RepoFolderData,
   UrlType,
 } from "../types/data.type";
+import { storeEmbeddings } from "../vector/embed";
 
 const stringifyProfile = (enriched: Enriched): string[] => {
   const { userData, allRepos } = enriched;
@@ -198,6 +199,7 @@ export const handleEnrichedData = async (
   key: string,
   encryptKey: string,
   qdrantKey: string,
+  qdrantUrl: string,
   db_url: string
 ) => {
   try {
@@ -237,7 +239,7 @@ export const handleEnrichedData = async (
       }
     }
 
-    await storeEmbeddings(docs, apiKey, data.info, qdrantKey);
+    await storeEmbeddings(docs, apiKey, data.info, qdrantKey, qdrantUrl);
     console.log("Vector data saved in pinecone");
   } catch (e: any) {
     throw new HTTPException(500, {

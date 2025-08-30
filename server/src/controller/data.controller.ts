@@ -16,6 +16,7 @@ export const insertData = (type: UrlType) => {
     const apiKey: string = c.env.AI_API_KEY;
     const encryptKey: string = c.env.ENCRYPTION_KEY;
     const qdrantKey: string = c.env.QDRANT_API_KEY;
+    const qdrantUrl: string = c.env.QDRANT_URL;
     const db_url: string = c.env.DATABASE_URL;
 
     console.log(
@@ -32,6 +33,7 @@ export const insertData = (type: UrlType) => {
       apiKey,
       encryptKey,
       qdrantKey,
+      qdrantUrl,
       db_url
     );
 
