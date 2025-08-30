@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import authRoute from "./routes/auth.route";
 import settingRoute from "./routes/setting.route";
+import dataRoute from "./routes/data.route";
 import { HTTPException } from "hono/http-exception";
 
 const app = new Hono<{
@@ -39,5 +40,6 @@ app.get("/health", (c) => {
 //? Routes
 app.route("/api/auth", authRoute);
 app.route("/api/setting", settingRoute);
+app.route("/api/data", dataRoute);
 
 export default app;
