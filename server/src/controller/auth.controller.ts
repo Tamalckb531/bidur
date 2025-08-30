@@ -31,13 +31,13 @@ export const signup = async (c: Context) => {
 
     const hashedPassword: string = bcrypt.hashSync(password, 10);
 
-    const encryptedApiKey: string = encryptApiKey(apiKey, c.env.ENCRYPTION_KEY);
+    const encryptedKey: string = encryptApiKey(apiKey, c.env.ENCRYPTION_KEY);
 
     const newUser: User = await prisma.user.create({
       data: {
         email,
         name,
-        apiKey: encryptedApiKey,
+        apiKey: encryptedKey,
         password: hashedPassword,
       },
     });
