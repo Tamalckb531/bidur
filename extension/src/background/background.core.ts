@@ -13,9 +13,21 @@ import type {
   RepoTag,
 } from "../types/data.type";
 
+const ApiEndPoint = {
+  LOGIN: "api/auth/login",
+  SIGNUP: "api/auth/signup",
+  PROFILE: "api/data/rag/profile",
+  REPO: "api/data/rag/repo",
+  REPO_FILE: "api/data/rag/repo_file",
+  REPO_FOLDER: "api/data/rag/repo_folder",
+  CHECK_DATA: "api/data/check",
+  KEY_CHANGE: "api/setting/change",
+};
+
 const headers = {
   Accept: "application/vnd.github.v3+json",
 };
+
 const fetchJson = async (url: string): Promise<any> => {
   const res = await fetch(url, { headers });
   if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.statusText}`);
@@ -23,10 +35,8 @@ const fetchJson = async (url: string): Promise<any> => {
   return await res.json();
 };
 
-// import { ApiEndPoint } from "../types/data.type";
-
-// const apiBaseUrl: string =
-//   import.meta.env.VITE_API_BASE_URL || "http://localhost:8787";
+const apiBaseUrl: string =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8787";
 
 export const slimRepos = async (
   repo: any,
@@ -72,7 +82,8 @@ export const slimRepos = async (
 };
 
 export const scrapeGTProfile = async (
-  userData: ProfileDataPayload
+  userData: ProfileDataPayload,
+  token: string
 ): Promise<Enriched> => {
   const username = userData.username;
 
@@ -94,24 +105,25 @@ export const scrapeGTProfile = async (
   };
 
   //? Send to backend server
-  //   try {
-  //     await fetch(`${apiBaseUrl}/${ApiEndPoint.PROFILE}`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(data),
-  //     });
-  //     console.log("Background.core -> Send Profile data to backend successfully");
-  //   } catch (err) {
-  //     console.error("Failed to send data to backend. Error: ", err);
-  //   }
+  try {
+    await fetch(`${apiBaseUrl}/${ApiEndPoint.PROFILE}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    console.error("Failed to send data to backend. Error: ", err);
+  }
 
   return data;
 };
 
 export const scrapeGTRepo = async (
-  repoBasicData: RepoBasicData
+  repoBasicData: RepoBasicData,
+  token: string
 ): Promise<RepoData> => {
   const { owner, repoName } = repoBasicData;
 
@@ -203,60 +215,58 @@ export const scrapeGTRepo = async (
   };
 
   // //? Send data to backend :
-  // try {
-  //   await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO}`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   });
-  //   console.log("Background.core -> Send Repo data to backend successfully");
-  // } catch (err) {
-  //   console.error("Failed to send repo enriched data to backend", err);
-  // }
+  try {
+    await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    console.error("Failed to send repo enriched data to backend", err);
+  }
 
   return data;
 };
 
 export const sendRepoFolderData = async (
-  _data: RepoFolderData
+  data: RepoFolderData,
+  token: string
 ): Promise<boolean> => {
-  // try {
-  //   await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO_FOLDER}`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   });
-  //   console.log(
-  //     "Background.core -> Send Repo Folder data to backend successfully"
-  //   );
-  // } catch (err) {
-  //   console.error("Failed to send repo folder data to backend", err);
-  //   return false;
-  // }
+  try {
+    await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO_FOLDER}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    console.error("Failed to send repo folder data to backend", err);
+    return false;
+  }
   return true;
 };
 
 export const sendRepoFileData = async (
-  _data: RepoFileData
+  data: RepoFileData,
+  token: string
 ): Promise<boolean> => {
-  // try {
-  //   await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO_FILE}`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   });
-  //   console.log(
-  //     "Background.core -> Send Repo File data to backend successfully"
-  //   );
-  // } catch (err) {
-  //   console.error("Failed to send repo file data to backend : ", err);
-  //   return false;
-  // }
+  try {
+    await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO_FILE}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    console.error("Failed to send repo file data to backend : ", err);
+    return false;
+  }
   return true;
 };

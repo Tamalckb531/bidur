@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ChromeTypes } from "../../types/data.type";
+import { ChromeTypes, Storage } from "../../types/data.type";
 import { isGithubUrl } from "../../helpers/func";
 
 interface msg {
@@ -8,6 +8,8 @@ interface msg {
 }
 
 const ChatBox = () => {
+  const token = localStorage.getItem(Storage.AUTH) || "";
+
   //! Whenever ChatBox component render, it register scraping initiate message in the chrome runtime that can be received by the background.
   //! Now it ensure that we only scraping data only when user open his chat-box to chat with the AI
   useEffect(() => {
@@ -18,6 +20,7 @@ const ChatBox = () => {
       chrome.runtime.sendMessage({
         type: ChromeTypes.INIT,
         url,
+        token,
         tabId: tabs[0].id,
       });
     });

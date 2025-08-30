@@ -32,7 +32,7 @@ export const storeEmbeddings = async (
     //? Init qdrant
     const collection = Constants.COLLECTION;
     const client = createQdrantClient(qdrantKey, qdrantUrl);
-    await client.upsert(collection, { points: upsertData });
+    client.upsert(collection, { points: upsertData });
   } catch (error: any) {
     throw new HTTPException(500, {
       message:

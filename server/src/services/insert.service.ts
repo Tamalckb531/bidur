@@ -223,8 +223,6 @@ export const handleEnrichedData = async (
         throw new Error("Unsupported Url");
     }
 
-    console.log("Our docs are ready : ", docs.length);
-
     //? getting user api key
     let apiKey: string = key;
     if (userId) {
@@ -240,7 +238,6 @@ export const handleEnrichedData = async (
     }
 
     await storeEmbeddings(docs, apiKey, data.info, qdrantKey, qdrantUrl);
-    console.log("Vector data saved in pinecone");
   } catch (e: any) {
     throw new HTTPException(500, {
       message: e.message || "Error occurred while getting the apiKey of user",

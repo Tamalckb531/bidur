@@ -5,8 +5,6 @@ import {
   getRepoFolderDataFromDOM,
 } from "./content.core";
 
-console.log("Content is running");
-
 const ChromeTypes = {
   INIT: "INIT_SCRAPE",
   PROFILE: "START_SCRAPE_PROFILE",

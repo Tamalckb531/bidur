@@ -6,7 +6,7 @@ import {
   sendRepoFolderData,
 } from "./background.core";
 
-console.log("Background is running");
+let userToken: string;
 
 const ChromeTypes = {
   INIT: "INIT_SCRAPE",
@@ -63,7 +63,8 @@ const getGitHubPageType = (url: string): UrlType => {
 
 chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
   if (message.type === ChromeTypes.INIT) {
-    const { url, tabId } = message;
+    const { url, tabId, token } = message;
+    userToken = token;
 
     const pageType = getGitHubPageType(url);
     // let storable: boolean = false;
@@ -103,25 +104,25 @@ chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
         break;
     }
   } else if (message.type === ChromeTypes.GT_PROF_DATA) {
-    const enriched = await scrapeGTProfile(message.payload);
+    const enriched = await scrapeGTProfile(message.payload, userToken);
 
     sendResponse({ enriched });
 
     return true;
   } else if (message.type === ChromeTypes.GT_REPO_DATA) {
-    const repoFullData = await scrapeGTRepo(message.payload);
+    const repoFullData = await scrapeGTRepo(message.payload, userToken);
 
     sendResponse({ repoFullData });
 
     return true;
   } else if (message.type === ChromeTypes.GT_REPO_FOLDER_DATA) {
-    const res = await sendRepoFolderData(message.payload);
+    const res = await sendRepoFolderData(message.payload, userToken);
     res
       ? sendResponse({ msg: "Data send successfully" })
       : sendResponse({ msg: "Data couldn't sent" });
     return res;
   } else if (message.type === ChromeTypes.GT_REPO_FILE_DATA) {
-    const res = await sendRepoFileData(message.payload);
+    const res = await sendRepoFileData(message.payload, userToken);
     res
       ? sendResponse({ msg: "Data send successfully" })
       : sendResponse({ msg: "Data couldn't sent" });

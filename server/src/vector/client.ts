@@ -12,5 +12,8 @@ export const createQdrantClient = (apiKey: string, url: string) => {
       vectors: { size: 768, distance: "Cosine" },
     });
   }
+
+  console.log("Client also ready ");
+
   return client;
 };
