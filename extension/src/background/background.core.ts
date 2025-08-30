@@ -1,4 +1,3 @@
-import { fetchJson } from "../helpers/func";
 import type {
   Contributors,
   Enriched,
@@ -13,6 +12,16 @@ import type {
   RepoInfo,
   RepoTag,
 } from "../types/data.type";
+
+const headers = {
+  Accept: "application/vnd.github.v3+json",
+};
+const fetchJson = async (url: string): Promise<any> => {
+  const res = await fetch(url, { headers });
+  if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.statusText}`);
+
+  return await res.json();
+};
 
 // import { ApiEndPoint } from "../types/data.type";
 
@@ -72,7 +81,7 @@ export const scrapeGTProfile = async (
   );
   const repos = await reposRes.json();
 
-  const topRepos = repos.slice(0, 7);
+  const topRepos = repos?.slice(0, 7);
 
   const enrichedRepos = await Promise.all(
     topRepos.map((repo: any) => slimRepos(repo, username))
@@ -211,13 +220,8 @@ export const scrapeGTRepo = async (
 };
 
 export const sendRepoFolderData = async (
-  data: RepoFolderData
+  _data: RepoFolderData
 ): Promise<boolean> => {
-  console.log(
-    "This log proofs that we are in background.core scrapped repo folder data and send them to backend: ",
-    data
-  );
-
   // try {
   //   await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO_FOLDER}`, {
   //     method: "POST",
@@ -237,13 +241,8 @@ export const sendRepoFolderData = async (
 };
 
 export const sendRepoFileData = async (
-  data: RepoFileData
+  _data: RepoFileData
 ): Promise<boolean> => {
-  console.log(
-    "This log proofs that we are in background.core scrapped repo file data and send them to backend: ",
-    data
-  );
-
   // try {
   //   await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO_FILE}`, {
   //     method: "POST",

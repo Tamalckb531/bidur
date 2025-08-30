@@ -28,7 +28,6 @@ chrome.runtime.onMessage.addListener((message) => {
   switch (message.type) {
     case ChromeTypes.PROFILE:
       const data = getProfileData();
-
       //? Sending profile data to background.ts
       chrome.runtime.sendMessage({
         type: ChromeTypes.GT_PROF_DATA,

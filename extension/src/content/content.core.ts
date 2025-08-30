@@ -1,4 +1,3 @@
-import { parseCountString } from "../helpers/func";
 import type {
   FileTree,
   ProfileDataPayload,
@@ -7,12 +6,26 @@ import type {
   RepoFolderData,
 } from "../types/data.type";
 
+const parseCountString = (str: string | null): number => {
+  if (!str) return 0;
+  str = str.trim().toLowerCase();
+  if (str.endsWith("k"))
+    return Math.round(parseFloat(str.replace("k", "")) * 1000);
+
+  return parseInt(str, 10) || 0;
+};
+
 export const getProfileData = (): ProfileDataPayload => {
   const username: string =
     document
       .querySelector("span.p-nickname")
       ?.textContent?.trim()
-      .split("\n")[0] || "";
+      .split("\n")[0] ||
+    document
+      .querySelector("span.AppHeader-context-item-label ")
+      ?.textContent?.trim()
+      .split("\n")[0] ||
+    "";
 
   const name: string =
     document.querySelector("span.p-name")?.textContent?.trim() || "";
