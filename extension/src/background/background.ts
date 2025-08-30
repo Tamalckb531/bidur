@@ -1,6 +1,10 @@
 import { getGitHubPageType } from "../helpers/func";
 import { ChromeTypes } from "../types/data.type";
-import { scrapeGTProfile, scrapeGTRepo } from "./background.core";
+import {
+  scrapeGTProfile,
+  scrapeGTRepo,
+  sendRepoFolderData,
+} from "./background.core";
 
 console.log("Background is running");
 
@@ -67,5 +71,11 @@ chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
     sendResponse({ repoFullData });
 
     return true;
+  } else if (message.type === ChromeTypes.GT_REPO_FOLDER_DATA) {
+    const res = await sendRepoFolderData(message.payload);
+    res
+      ? sendResponse({ msg: "Data send successfully" })
+      : sendResponse({ msg: "Data couldn't sent" });
+    return res;
   }
 });

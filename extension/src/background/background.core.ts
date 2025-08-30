@@ -8,6 +8,7 @@ import type {
   RepoApiData,
   RepoBasicData,
   RepoData,
+  RepoFolderData,
   RepoInfo,
   RepoTag,
 } from "../types/data.type";
@@ -206,4 +207,27 @@ export const scrapeGTRepo = async (
   // }
 
   return data;
+};
+
+export const sendRepoFolderData = async (
+  data: RepoFolderData
+): Promise<boolean> => {
+  console.log("This log proofs that we are in background.core: ", data);
+
+  // try {
+  //   await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO_FOLDER}`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   });
+  //   console.log(
+  //     "Background.core -> Send Repo Folder data to backend successfully"
+  //   );
+  // } catch (err) {
+  //   console.error("Failed to send repo folder data to backend", err);
+  //   return false;
+  // }
+  return true;
 };
