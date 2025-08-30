@@ -1,6 +1,7 @@
 import { Smile } from "lucide-react";
 import { ApiEndPoint, Storage, type User } from "../../types/data.type";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { TabContext } from "../../context/TabContext";
 
 const Info = () => {
   const payload = localStorage.getItem(Storage.USERINFO) || "";
@@ -13,6 +14,10 @@ const Info = () => {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const apiBaseUrl: string =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:8787";
+  const context = useContext(TabContext);
+  if (!context) return null;
+
+  const { setTab } = context;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setApiKey(e.target.value);
@@ -59,6 +64,12 @@ const Info = () => {
     }
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem(Storage.AUTH);
+    localStorage.removeItem(Storage.USERINFO);
+    setTab("login");
+  };
+
   return (
     <div className=" flex flex-col justify-center items-center gap-1 p-2 mt-2 text-[var(--dark-color)]">
       <p className=" flex items-center gap-2 justify-center  text-4xl font-bold text-center">
@@ -98,8 +109,22 @@ const Info = () => {
           {successMsg && <p className="mt-2 text-green-600">{successMsg}</p>}
         </div>
       </form>
-      <div className=" mt-2 mx-auto w-full flex items-center justify-center"></div>
-      <button></button>
+      <div className="mt-2 w-full flex ">
+        <button
+          type="button"
+          className={`inline-flex justify-center w-[70px] p-1.5 rounded-sm text-[14px] cursor-pointer bg-[var(--dark-color)] hover:bg-[#716863] text-[var(--bg-color)]`}
+          onClick={handleLogOut}
+        >
+          Logout
+        </button>
+        <button
+          type="button"
+          className={` ml-2 inline-flex justify-center w-[140px] p-1.5 rounded-sm text-[14px] cursor-pointer bg-[var(--dark-color)] hover:bg-[#716863] text-[var(--bg-color)]`}
+          onClick={() => setTab("main")}
+        >
+          Goto Chat
+        </button>
+      </div>
     </div>
   );
 };

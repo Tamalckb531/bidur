@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { TabContext } from "./context/TabContext";
-import { Storage } from "./types/data.type";
 import ChatBoxWrapper from "./components/Wrapper/ChatBoxWrapper";
 import LoginWrapper from "./components/Wrapper/LoginWrapper";
 import SignupWrapper from "./components/Wrapper/SignupWrapper";
@@ -10,11 +9,8 @@ function App() {
   const context = useContext(TabContext);
   if (!context) return null;
 
-  const { tab, setTab } = context;
+  const { tab } = context;
 
-  const token = localStorage.getItem(Storage.AUTH);
-
-  if (token) setTab("settings");
   return (
     <div className=" w-[400px] h-[600px]  bg-[var(--bg-color)] flex flex-col justify-between">
       {tab === "main" && <ChatBoxWrapper />}

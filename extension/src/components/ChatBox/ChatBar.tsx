@@ -1,4 +1,11 @@
+import { useContext } from "react";
+import { TabContext } from "../../context/TabContext";
+
 const ChatBar = () => {
+  const context = useContext(TabContext);
+  if (!context) return null;
+
+  const { setTab } = context;
   return (
     <form>
       <div className="flex items-center p-2 rounded-lg bg-[var(--bg-color)]">
@@ -11,6 +18,7 @@ const ChatBar = () => {
         <button
           type="submit"
           className="inline-flex justify-center p-2.5 text-[var(--bg-color)] rounded-sm text-sm cursor-pointer bg-[var(--dark-color)] hover:bg-[#716863]"
+          onClick={() => setTab("settings")}
         >
           Send
         </button>
