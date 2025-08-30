@@ -13,13 +13,11 @@ import { User } from "../generated/prisma";
 import { getPrisma } from "../libs/prismaFunc";
 
 export const signup = async (c: Context) => {
-  const prisma = getPrisma(c.env.DATABASE_URL);
-
   const { email, password, name, apiKey } = await c.req.json<SignUpBodyTypes>();
 
-  console.log("Payload from extension : ", email, password, name, apiKey);
-
   try {
+    const prisma = getPrisma(c.env.DATABASE_URL);
+
     SignUpSchema.parse({ name, email, apiKey, password });
 
     const isUserExist: boolean =
@@ -59,8 +57,6 @@ export const signup = async (c: Context) => {
 
     const { password: pass, apiKey: key, ...user } = newUser;
 
-    console.log("Signed user info : ", user);
-
     return c.json({
       msg: "Signed up successfully",
       user: user,
@@ -74,13 +70,10 @@ export const signup = async (c: Context) => {
 };
 
 export const login = async (c: Context) => {
-  const prisma = getPrisma(c.env.DATABASE_URL);
-
   const { email, password } = await c.req.json<LoginBodyTypes>();
 
-  console.log("Payload from extension : ", email, password);
-
   try {
+    const prisma = getPrisma(c.env.DATABASE_URL);
     LoginSchema.parse({ email, password });
 
     const validUser: User | null = await prisma.user.findFirst({
@@ -116,8 +109,6 @@ export const login = async (c: Context) => {
     );
 
     const { password: pass, apiKey: key, ...user } = validUser;
-
-    console.log("Logged user info : ", user);
 
     return c.json({
       msg: "Logged in successfully",

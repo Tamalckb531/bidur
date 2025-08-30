@@ -1,12 +1,12 @@
 {
   "name": "server",
-  "type": "module",
   "scripts": {
     "dev": "dotenv -e .dev.vars -- wrangler dev",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "migrate": "dotenv -e .dev.vars -- npx prisma migrate dev",
-    "generate": "dotenv -e .dev.vars -- npx prisma generate --no-engine --data-proxy",
+    "reset": "dotenv -e .dev.vars -- npx prisma migrate reset",
+    "generate": "dotenv -e .dev.vars -- npx prisma generate --schema=prisma/schema.prisma",
     "studio": "dotenv -e .dev.vars -- npx prisma studio",
     "pull": "dotenv -e .dev.vars -- npx prisma db pull"
   },
