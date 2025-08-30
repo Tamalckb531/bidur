@@ -1,9 +1,39 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { HTTPException } from "hono/http-exception";
 
-const app = new Hono()
+const app = new Hono<{
+  Bindings: {
+    DATABASE_URL: string;
+    JWT_SECRET: string;
+  };
+  Variables: {
+    userId: string;
+  };
+}>();
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+//? CORS policy
+app.use(
+  "*",
+  cors({
+    origin: "*",
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-export default app
+//? Global error handling :
+app.onError((err, c) => {
+  if (err instanceof HTTPException) {
+    return c.json({ message: err.message }, err.status);
+  }
+  return c.json({ message: "Internal Server Error" }, 500);
+});
+
+app.get("/health", (c) => {
+  return c.json({ message: "server is healthy" });
+});
+
+//? Routes
+
+export default app;
