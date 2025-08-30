@@ -1,4 +1,4 @@
-import { getProfileData } from "./content.core";
+import { getProfileData, getRepoDataFromDOM } from "./content.core";
 
 console.log("Content is running");
 
@@ -28,6 +28,14 @@ chrome.runtime.onMessage.addListener((message) => {
       chrome.runtime.sendMessage({
         type: ChromeTypes.GT_PROF_DATA,
         payload: data,
+      });
+      break;
+    case ChromeTypes.REPO:
+      const repoBasicData = getRepoDataFromDOM();
+
+      chrome.runtime.sendMessage({
+        type: ChromeTypes.GT_REPO_DATA,
+        payload: repoBasicData,
       });
       break;
     default:

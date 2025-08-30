@@ -1,6 +1,6 @@
 import { getGitHubPageType } from "../helpers/func";
 import { ChromeTypes } from "../types/data.type";
-import { scrapeGTProfile } from "./background.core";
+import { scrapeGTProfile, scrapeGTRepo } from "./background.core";
 
 console.log("Background is running");
 
@@ -48,7 +48,23 @@ chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
   } else if (message.type === ChromeTypes.GT_PROF_DATA) {
     const enriched = await scrapeGTProfile(message.payload);
 
+    console.log(
+      "Background -> Got the entire Profile data from Api and DOM : ",
+      enriched
+    );
+
     sendResponse({ enriched });
+
+    return true;
+  } else if (message.type === ChromeTypes.GT_REPO_DATA) {
+    const repoFullData = await scrapeGTRepo(message.payload);
+
+    console.log(
+      "Background -> Got the entire Repo data from Api and DOM : ",
+      repoFullData
+    );
+
+    sendResponse({ repoFullData });
 
     return true;
   }

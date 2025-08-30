@@ -1,6 +1,13 @@
+import { fetchJson } from "../helpers/func";
 import type {
+  Contributors,
   Enriched,
+  IssuesPr,
   ProfileDataPayload,
+  Releases,
+  RepoApiData,
+  RepoBasicData,
+  RepoData,
   RepoInfo,
   RepoTag,
 } from "../types/data.type";
@@ -88,6 +95,115 @@ export const scrapeGTProfile = async (
   //   } catch (err) {
   //     console.error("Failed to send data to backend. Error: ", err);
   //   }
+
+  return data;
+};
+
+export const scrapeGTRepo = async (
+  repoBasicData: RepoBasicData
+): Promise<RepoData> => {
+  const { owner, repoName } = repoBasicData;
+
+  //? Fetch open issues (Limit 30)
+  let openIssues: IssuesPr[] = [];
+  try {
+    const issuesRes = await fetchJson(
+      `https://api.github.com/repos/${owner}/${repoName}/issues?state=open&per_page=30`
+    );
+
+    openIssues = issuesRes
+      .filter((issue: any) => !issue.pull_request)
+      .map((issue: any) => ({
+        number: issue.number,
+        title: issue.title,
+        state: issue.state,
+        labels: issue.labels.map((label: any) => label.name),
+      }));
+  } catch (err) {
+    console.warn("Failed to fetch open issues", err);
+  }
+
+  //? Fetch Pull requests (Limit 30)
+  let openPullRequests: IssuesPr[] = [];
+  try {
+    const prRes = await fetchJson(
+      `https://api.github.com/repos/${owner}/${repoName}/pulls?state=open&per_page=30`
+    );
+
+    openPullRequests = prRes.map((pr: any) => ({
+      number: pr.number,
+      title: pr.title,
+      state: pr.state,
+      labels: pr.labels.map((label: any) => label.name),
+    }));
+  } catch (err) {
+    console.warn("Failed to fetch open pull requests", err);
+  }
+
+  //? Fetch latest 5 releases
+  let releases: Releases[] = [];
+  try {
+    const releasesRes = await fetchJson(
+      `https://api.github.com/repos/${owner}/${repoName}/releases?per_page=5`
+    );
+
+    if (Array.isArray(releasesRes)) {
+      releases = releasesRes.map((release: any) => ({
+        tag_name: release.tag_name,
+        name: release.name,
+        body: release.body,
+        published_at: release.published_at,
+        url: release.html_url,
+      }));
+    }
+  } catch (err) {
+    console.warn("Failed to fetch latest releases", err);
+  }
+
+  //? Fetch top 10 contributors
+  let contributors: Contributors[] = [];
+  try {
+    const contributorsRes = await fetchJson(
+      `https://api.github.com/repos/${owner}/${repoName}/contributors?per_page=10`
+    );
+
+    if (Array.isArray(contributorsRes)) {
+      contributors = contributorsRes.map((contri: any) => ({
+        login: contri.lgoin,
+        contributions: contri.contributions,
+      }));
+    }
+  } catch (err) {
+    console.warn("Failed to fetch top 10 contributors", err);
+  }
+
+  //? Making finalize data
+  const repoApiData: RepoApiData = {
+    openIssues,
+    openPullRequests,
+    releases,
+    contributors,
+  };
+
+  const data: RepoData = {
+    info: `repo/${owner}/${repoName}`,
+    repoBasicData: repoBasicData,
+    repoApiData: repoApiData,
+  };
+
+  // //? Send data to backend :
+  // try {
+  //   await fetch(`${apiBaseUrl}/${ApiEndPoint.REPO}`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   });
+  //   console.log("Background.core -> Send Repo data to backend successfully");
+  // } catch (err) {
+  //   console.error("Failed to send repo enriched data to backend", err);
+  // }
 
   return data;
 };

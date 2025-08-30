@@ -22,6 +22,7 @@ const reservedPages = [
 export const isGithubUrl = (url: string): boolean => {
   return url.includes("github.com");
 };
+
 export const getGitHubPageType = (url: string): UrlType => {
   try {
     const parsed = new URL(url);
@@ -42,4 +43,23 @@ export const getGitHubPageType = (url: string): UrlType => {
   } catch {
     return "NONE";
   }
+};
+
+export const parseCountString = (str: string | null): number => {
+  if (!str) return 0;
+  str = str.trim().toLowerCase();
+  if (str.endsWith("k"))
+    return Math.round(parseFloat(str.replace("k", "")) * 1000);
+
+  return parseInt(str, 10) || 0;
+};
+
+const headers = {
+  Accept: "application/vnd.github.v3+json",
+};
+export const fetchJson = async (url: string): Promise<any> => {
+  const res = await fetch(url, { headers });
+  if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.statusText}`);
+
+  return await res.json();
 };
