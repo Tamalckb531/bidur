@@ -1,9 +1,27 @@
+import { useEffect } from "react";
+import { ChromeTypes } from "../../types/data.type";
+import { isGithubUrl } from "../../helpers/func";
+
 interface msg {
   type: "send" | "receive";
   message: string;
 }
 
 const ChatBox = () => {
+  //! Whenever ChatBox component render, it register scraping initiate message in the chrome runtime that can be received by the background.
+  //! Now it ensure that we only scraping data only when user open his chat-box to chat with the AI
+  useEffect(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const url = tabs[0].url || "";
+      if (!isGithubUrl(url)) return;
+
+      chrome.runtime.sendMessage({
+        type: ChromeTypes.INIT,
+        url,
+        tabId: tabs[0].id,
+      });
+    });
+  }, []);
   return (
     <div className=" flex flex-col flex-grow gap-4 mx-2 w-full overflow-y-auto scrollbar-thin">
       <ChatMsg
