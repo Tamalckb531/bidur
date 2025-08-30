@@ -15,7 +15,7 @@ export const insertData = (type: UrlType) => {
     const userId: string | null = c.get("userId");
     const apiKey: string = c.env.AI_API_KEY;
     const encryptKey: string = c.env.ENCRYPTION_KEY;
-    const pineconeKey: string = c.env.PINECONE_API_KEY;
+    const qdrantKey: string = c.env.QDRANT_API_KEY;
     const db_url: string = c.env.DATABASE_URL;
 
     console.log(
@@ -31,7 +31,7 @@ export const insertData = (type: UrlType) => {
       userId,
       apiKey,
       encryptKey,
-      pineconeKey,
+      qdrantKey,
       db_url
     );
 
