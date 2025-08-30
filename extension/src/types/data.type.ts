@@ -155,6 +155,7 @@ export const ApiEndPoint = {
   REPO_FILE: "api/data/rag/repo_file",
   REPO_FOLDER: "api/data/rag/repo_folder",
   CHECK_DATA: "api/data/check",
+  KEY_CHANGE: "api/setting/change",
 } as const;
 
 export const ChromeTypes = {

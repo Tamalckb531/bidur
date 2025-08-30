@@ -38,6 +38,6 @@ app.get("/health", (c) => {
 
 //? Routes
 app.route("/api/auth", authRoute);
-app.route("/api/auth", settingRoute);
+app.route("/api/setting", settingRoute);
 
 export default app;

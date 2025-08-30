@@ -94,7 +94,7 @@ const SignupBox: React.FC = () => {
     } finally {
       setTimeout(() => {
         setErrMsg("");
-      }, 3000);
+      }, 5000);
     }
   };
 

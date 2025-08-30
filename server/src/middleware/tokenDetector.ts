@@ -11,7 +11,6 @@ export const authMiddleware: MiddlewareHandler = async (c, next) => {
     try {
       const decoded: any = jwt.verify(token, c.env.JWT_SECRET_KEY);
       userId = decoded.id;
-      console.log("Got the user Id from auth middleware", userId);
     } catch (err) {
       userId = null;
     }

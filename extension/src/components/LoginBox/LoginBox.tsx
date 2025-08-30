@@ -91,7 +91,7 @@ const LoginBox: React.FC = () => {
     } finally {
       setTimeout(() => {
         setErrMsg("");
-      }, 3000);
+      }, 5000);
     }
   };
   return (
