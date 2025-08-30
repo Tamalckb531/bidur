@@ -14,7 +14,7 @@ function App() {
 
   const token = localStorage.getItem(Storage.AUTH);
 
-  if (token) setTab("main");
+  if (token) setTab("settings");
   return (
     <div className=" w-[400px] h-[600px]  bg-[var(--bg-color)] flex flex-col justify-between">
       {tab === "main" && <ChatBoxWrapper />}

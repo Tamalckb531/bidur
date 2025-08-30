@@ -130,7 +130,7 @@ export interface TabContextType {
   setTab: (tab: TabType) => void;
 }
 
-type User = {
+export type User = {
   email: string;
   name: string;
   id: string;
