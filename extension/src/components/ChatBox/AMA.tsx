@@ -17,9 +17,6 @@ const AMA = () => {
       .split("/")
       .filter((segment) => segment !== "");
 
-    console.log(url);
-    console.log(pathSegments);
-
     const reservedPages = [
       "dashboard",
       "notifications",

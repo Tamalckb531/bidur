@@ -1,7 +1,18 @@
-import { ChromeTypes } from "../types/data.type";
 import { getProfileData } from "./content.core";
 
 console.log("Content is running");
+
+const ChromeTypes = {
+  INIT: "INIT_SCRAPE",
+  PROFILE: "START_SCRAPE_PROFILE",
+  REPO: "START_SCRAPE_REPO",
+  REPO_FOLDER: "START_SCRAPE_REPO_Folder",
+  REPO_FILE: "START_SCRAPE_REPO_File",
+  GT_PROF_DATA: "GITHUB_PROFILE_DATA",
+  GT_REPO_DATA: "GITHUB_REPO_DATA",
+  GT_REPO_FILE_DATA: "GITHUB_REPO_FILE_DATA",
+  GT_REPO_FOLDER_DATA: "GITHUB_REPO_FOLDER_DATA",
+};
 
 //? Guard for content.ts
 if (!window.location.hostname.includes("github.com")) {
@@ -12,7 +23,6 @@ chrome.runtime.onMessage.addListener((message) => {
   switch (message.type) {
     case ChromeTypes.PROFILE:
       const data = getProfileData();
-      console.log("Content -> Scrape Profile data from DOM: ", data);
 
       //? Sending profile data to background.ts
       chrome.runtime.sendMessage({
