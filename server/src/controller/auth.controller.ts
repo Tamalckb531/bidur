@@ -59,10 +59,68 @@ export const signup = async (c: Context) => {
 
     const { password: pass, apiKey: key, ...user } = newUser;
 
-    console.log("Signup successful for user : ", user);
+    console.log("Signed user info : ", user);
 
     return c.json({
       msg: "Signed up successfully",
+      user: user,
+      token,
+    });
+  } catch (e: any) {
+    throw new HTTPException(500, {
+      message: e.message || "An error occurred while logging in",
+    });
+  }
+};
+
+export const login = async (c: Context) => {
+  const prisma = getPrisma(c.env.DATABASE_URL);
+
+  const { email, password } = await c.req.json<LoginBodyTypes>();
+
+  console.log("Payload from extension : ", email, password);
+
+  try {
+    LoginSchema.parse({ email, password });
+
+    const validUser: User | null = await prisma.user.findFirst({
+      where: { email },
+    });
+
+    if (!validUser)
+      throw new HTTPException(400, {
+        message: "Email not registered",
+      });
+
+    const validPassword: boolean = bcrypt.compareSync(
+      password,
+      validUser.password
+    );
+
+    if (!validPassword)
+      throw new HTTPException(400, {
+        message: "Invalid Password",
+      });
+
+    if (!c.env.JWT_SECRET_KEY) {
+      throw new Error(
+        "JWT_SECRET_KEY is not defined in the environment variables"
+      );
+    }
+
+    const token: string = jwt.sign(
+      {
+        id: validUser.id,
+      },
+      c.env.JWT_SECRET_KEY
+    );
+
+    const { password: pass, apiKey: key, ...user } = validUser;
+
+    console.log("Logged user info : ", user);
+
+    return c.json({
+      msg: "Logged in successfully",
       user: user,
       token,
     });
