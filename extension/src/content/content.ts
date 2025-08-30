@@ -1,6 +1,7 @@
 import {
   getProfileData,
   getRepoDataFromDOM,
+  getRepoFileDataFromDOM,
   getRepoFolderDataFromDOM,
 } from "./content.core";
 
@@ -48,6 +49,13 @@ chrome.runtime.onMessage.addListener((message) => {
       chrome.runtime.sendMessage({
         type: ChromeTypes.GT_REPO_FOLDER_DATA,
         payload: repoFolderData,
+      });
+      break;
+    case ChromeTypes.REPO_FILE:
+      const repoFileData = getRepoFileDataFromDOM();
+      chrome.runtime.sendMessage({
+        type: ChromeTypes.GT_REPO_FILE_DATA,
+        payload: repoFileData,
       });
       break;
     default:

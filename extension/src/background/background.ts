@@ -3,6 +3,7 @@ import { ChromeTypes } from "../types/data.type";
 import {
   scrapeGTProfile,
   scrapeGTRepo,
+  sendRepoFileData,
   sendRepoFolderData,
 } from "./background.core";
 
@@ -73,6 +74,12 @@ chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
     return true;
   } else if (message.type === ChromeTypes.GT_REPO_FOLDER_DATA) {
     const res = await sendRepoFolderData(message.payload);
+    res
+      ? sendResponse({ msg: "Data send successfully" })
+      : sendResponse({ msg: "Data couldn't sent" });
+    return res;
+  } else if (message.type === ChromeTypes.GT_REPO_FILE_DATA) {
+    const res = await sendRepoFileData(message.payload);
     res
       ? sendResponse({ msg: "Data send successfully" })
       : sendResponse({ msg: "Data couldn't sent" });
